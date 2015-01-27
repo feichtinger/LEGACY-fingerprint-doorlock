@@ -1,0 +1,21 @@
+
+Zugangssystem Kloster
+---------------------
+
+Angebot:
+# Vorteil: Schlüssel kann nicht mehr verloren/verlegt oder an dritte weitergegeben werden.
+# Bis zu 1000 Fingerabdrücke mit zugehörigem Namen gespeichert.
+# Finger registrieren, Finger löschen, ... mit PC möglich
+# Ganztageszugang mit Taster maximal 12h für "Gruppenleiter"
+# Es gibt 2 Kathegorieren: Normale Benutzer und Gruppenleiter
+# Protokollierung ist grundsätzlich möglich (gespeichert werden: autorisierter Zugang, Ganztageszugang erstellen, löschen)
+
+Nachteile:
+# Die Hausstür ist lediglich über die Falle "verschlossen" und nicht "verriegelt"
+# Auch ein Fingerabdrucksensor lässt sich austricksen falls ein Angreifer an einen gültigen Fingerabdruck kommt
+# Es ist also kein "Hochsicherheitssystem"
+
+Forderungen:
+# Gartentür und 2. Eingangstür bleiben unversperrt (Zylinder ausbauen)
+# Haustür verfügt über ein "Wechselschloss" (Innen Klinke, außen Knauf, Falle lässt sich von außen mit Schlüssel öffnen)
+# Über einen Schlüssel verfügt nur der Hausverwalter
