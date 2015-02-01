@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Fingerprint.svg</file>
+    </qresource>
+</RCC>

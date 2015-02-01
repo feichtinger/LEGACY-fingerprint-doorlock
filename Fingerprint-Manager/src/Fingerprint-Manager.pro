@@ -14,10 +14,16 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         fingerprintmanager.cpp \
-    dialogaddfinger.cpp
+    dialogaddfinger.cpp \
+    dialogsetopentime.cpp
 
 HEADERS  += fingerprintmanager.h \
-    dialogaddfinger.h
+    dialogaddfinger.h \
+    dialogsetopentime.h
 
 FORMS    += fingerprintmanager.ui \
-    dialogaddfinger.ui
+    dialogaddfinger.ui \
+    dialogsetopentime.ui
+
+RESOURCES += \
+    resource.qrc

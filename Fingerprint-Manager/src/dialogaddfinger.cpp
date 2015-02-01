@@ -32,6 +32,12 @@ void DialogAddFinger::on_pushButton_clicked()
 {
 	// check name string
 	name=ui->lineEdit_name->text();
+	if(name.isEmpty())
+	{
+		QMessageBox::warning(this, tr("kein Name angegeben"), tr("Bitte geben Sie erst einen Namen ein."));
+		return;
+	}
+	
 	for(int i=0; i<name.length(); i++)
 	{
 		int ch=name.at(i).unicode();
@@ -45,6 +51,5 @@ void DialogAddFinger::on_pushButton_clicked()
 	
 	time=ui->timeEdit_time->time();
 	
-	emit accepted();
-	hide();
+	QDialog::accept();
 }

@@ -66,6 +66,8 @@ void shell_feedChar(char ch)
 	
 	// terminate string
 	scan_buffer[len]='\0';
+	
+	len=strlen(scan_buffer);
 }
 
 
@@ -73,18 +75,21 @@ void shell_feedChar(char ch)
  * scan, parse and execute the command given in scan_buffer (if any)
  */
 void shell_scan()
-{	
-	// search for 'end of line'
-	char *eof_ch=strchr(scan_buffer, '\n');
-	if(eof_ch!=NULL)
-	{	
-		// initialize scanner/parser
-		pos=0;
-		nextCh();
-		parse();
-		
-		// parsing finished, empty buffer
-		len=0;
+{
+	if(len!=0)
+	{
+		// search for 'end of line'
+		char *eof_ch=strchr(scan_buffer, '\n');
+		if(eof_ch!=NULL)
+		{
+			// initialize scanner/parser
+			pos=0;
+			nextCh();
+			parse();
+			
+			// parsing finished, empty buffer
+			len=0;
+		}
 	}
 }
 

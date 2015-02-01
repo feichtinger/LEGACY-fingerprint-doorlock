@@ -25,7 +25,7 @@ CC = $(AVR32TOOLS)avr32-gcc
 LD = $(AVR32TOOLS)avr32-gcc
 OBJCOPY = $(AVR32TOOLS)avr32-objcopy
 RM = rm -rf
-DFU = ../toolchain/dfu-programmer/src/dfu-programmer
+DFU = $(TOOLCHAIN)dfu-programmer/src/dfu-programmer
 
 
 # ** ** SOFTWARE FRAMEWORK ** **

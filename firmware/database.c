@@ -206,7 +206,7 @@ void db_listAllFingers()
 	{
 		if(strlen(finger[i].name)!=0)
 		{
-			printf("id: %d, %s %d\n", i, finger[i].name, finger[i].openTime);
+			printf("id: %d %s %d\n", i, finger[i].name, finger[i].openTime);
 		}
 	}
 }
