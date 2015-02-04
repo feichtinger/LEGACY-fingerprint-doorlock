@@ -153,9 +153,14 @@ void FingerprintManager::parseListEntry(QString line)
 			
 			ui->tableWidget->setRowCount(newRowCount);
 			
-			// insert not editable dummy items
+			// add new rows
 			for(int i=oldRowCount; i<newRowCount; i++)
 			{
+				// set Header
+				QTableWidgetItem* vertHeader=new QTableWidgetItem(QString::number(i));
+				ui->tableWidget->setVerticalHeaderItem(i, vertHeader);
+				
+				// insert not editable dummy items
 				QTableWidgetItem* dummyName=new QTableWidgetItem(QString());
 				dummyName->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 				ui->tableWidget->setItem(i, 0, dummyName);
@@ -222,7 +227,12 @@ void FingerprintManager::deleteFinger()
 void FingerprintManager::setOpenTime()
 {
 	QString name=ui->tableWidget->item(selectedID, 0)->text();
-	QTime time=QTime::fromString(ui->tableWidget->item(selectedID, 1)->text());
+	QString timeString=ui->tableWidget->item(selectedID, 1)->text();
+	QTime time=QTime(0,0);
+	if(!timeString.isEmpty())
+	{
+		time=QTime::fromString(timeString);
+	}
 	
 	dialogSetOpenTime->setTime(time);
 	dialogSetOpenTime->setName(name);
@@ -264,8 +274,8 @@ void FingerprintManager::on_lineEdit_search_editingFinished()
 		QString name=ui->tableWidget->item(row, 0)->text();
 		if(name.contains(searchText, Qt::CaseInsensitive))
 		{
-			ui->tableWidget->selectRow(i);
-			//ui->tableWidget->setCurrentCell(i, 0);
+			ui->tableWidget->selectRow(row);
+			ui->tableWidget->setCurrentCell(row, 0);
 			break;
 		}
 	}
