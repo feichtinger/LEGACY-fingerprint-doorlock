@@ -14,9 +14,15 @@ BOARD = EVK1101
 BOARDPATH = evk1101
 
 
-# ** ** TOOLS ** **
-TOOLCHAIN = ../../AVR32/toolchain/
 
+# ENTER THE NAME OF YOUR TOOLCHAIN HERE:
+###############################
+TOOLCHAIN = ~/AVR32_toolchain/
+###############################
+
+
+
+# ** ** TOOLS ** **
 AVR32TOOLS = $(TOOLCHAIN)avr32-gnu-toolchain-linux_x86_64/bin/
 
 MAKE = make
@@ -30,54 +36,55 @@ DFU = $(TOOLCHAIN)dfu-programmer/src/dfu-programmer
 
 # ** ** SOFTWARE FRAMEWORK ** **
 
-AVR32FRAMEWORK = $(TOOLCHAIN)SOFTWARE_FRAMEWORK
+AVR32FRAMEWORK = $(TOOLCHAIN)asf
 
 AVR32HEADERS = 		-I ./
 AVR32HEADERS += 	-I $(TOOLCHAIN)atmel-headers/
-AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/utils/
-AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/utils/preprocessor/
-AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/boards/
-AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/boards/$(BOARDPATH)/
-AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/drivers/cpu/cycle_counter/
-AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/drivers/gpio/
-AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/drivers/intc/
-AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/drivers/pm/
-#AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/drivers/pwm/
-AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/drivers/usart/
-AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/drivers/spi/
+AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/common/utils/
+AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/avr32/utils/
+AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/avr32/utils/preprocessor/
+AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/avr32/boards/
+AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/avr32/boards/$(BOARDPATH)/
+AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/avr32/drivers/cpu/cycle_counter/
+AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/avr32/drivers/gpio/
+AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/avr32/drivers/intc/
+AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/avr32/drivers/pm/
+#AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/avr32/drivers/pwm/
+AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/avr32/drivers/usart/
+AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/avr32/drivers/spi/
 # for SD card
-AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/components/memory/sd_mmc/sd_mmc_spi/
-AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/services/storage/ctrl_access
-AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/services/fs/fat/
+AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/avr32/components/memory/sd_mmc/sd_mmc_spi/
+AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/common/services/storage/ctrl_access
+AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/avr32/services/fs/fat/
 # for USB
-AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/drivers/usbb/_asf_v1/enum/
+AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/avr32/drivers/usbb/_asf_v1/enum/
 
 
-SRC += 	$(AVR32FRAMEWORK)/drivers/gpio/gpio.c
-SRC +=	$(AVR32FRAMEWORK)/drivers/intc/intc.c
-SRC +=	$(AVR32FRAMEWORK)/drivers/pm/pm.c
-#SRC +=	$(AVR32FRAMEWORK)/drivers/pm/pm_conf_clocks.c
-#SRC +=	$(AVR32FRAMEWORK)/drivers/pm/power_clocks_lib.c
-#SRC +=	$(AVR32FRAMEWORK)/drivers/pwm/pwm.c
-SRC +=	$(AVR32FRAMEWORK)/drivers/spi/spi.c
-SRC +=	$(AVR32FRAMEWORK)/drivers/usart/usart.c
-SRC +=	$(AVR32FRAMEWORK)/boards/$(BOARDPATH)/led.c
+SRC += 	$(AVR32FRAMEWORK)/avr32/drivers/gpio/gpio.c
+SRC +=	$(AVR32FRAMEWORK)/avr32/drivers/intc/intc.c
+SRC +=	$(AVR32FRAMEWORK)/avr32/drivers/pm/pm.c
+#SRC +=	$(AVR32FRAMEWORK)/avr32/drivers/pm/pm_conf_clocks.c
+#SRC +=	$(AVR32FRAMEWORK)/avr32/drivers/pm/power_clocks_lib.c
+#SRC +=	$(AVR32FRAMEWORK)/avr32/drivers/pwm/pwm.c
+SRC +=	$(AVR32FRAMEWORK)/avr32/drivers/spi/spi.c
+SRC +=	$(AVR32FRAMEWORK)/avr32/drivers/usart/usart.c
+SRC +=	$(AVR32FRAMEWORK)/avr32/boards/$(BOARDPATH)/led.c
 # for SD card
-SRC +=	$(AVR32FRAMEWORK)/components/memory/sd_mmc/sd_mmc_spi/sd_mmc_spi.c
-SRC +=	$(AVR32FRAMEWORK)/components/memory/sd_mmc/sd_mmc_spi/sd_mmc_spi_mem.c
-SRC +=	$(AVR32FRAMEWORK)/services/storage/ctrl_access/ctrl_access.c
-SRC +=	$(AVR32FRAMEWORK)/services/fs/fat/fat.c
-SRC +=	$(AVR32FRAMEWORK)/services/fs/fat/fat_unusual.c
-SRC +=	$(AVR32FRAMEWORK)/services/fs/fat/file.c
-SRC +=	$(AVR32FRAMEWORK)/services/fs/fat/fsaccess.c
-SRC +=	$(AVR32FRAMEWORK)/services/fs/fat/navigation.c
+SRC +=	$(AVR32FRAMEWORK)/avr32/components/memory/sd_mmc/sd_mmc_spi/sd_mmc_spi.c
+SRC +=	$(AVR32FRAMEWORK)/avr32/components/memory/sd_mmc/sd_mmc_spi/sd_mmc_spi_mem.c
+SRC +=	$(AVR32FRAMEWORK)/common/services/storage/ctrl_access/ctrl_access.c
+SRC +=	$(AVR32FRAMEWORK)/avr32/services/fs/fat/fat.c
+SRC +=	$(AVR32FRAMEWORK)/avr32/services/fs/fat/fat_unusual.c
+SRC +=	$(AVR32FRAMEWORK)/avr32/services/fs/fat/file.c
+SRC +=	$(AVR32FRAMEWORK)/avr32/services/fs/fat/fsaccess.c
+SRC +=	$(AVR32FRAMEWORK)/avr32/services/fs/fat/navigation.c
 # for USB
 
 
 
 # TODO: USB
 
-AVR32_ASM = 	$(AVR32FRAMEWORK)/drivers/intc/exception.S
+AVR32_ASM = 	$(AVR32FRAMEWORK)/avr32/drivers/intc/exception.S
 
 
 # ** ** object files ** **

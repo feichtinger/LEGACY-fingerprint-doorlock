@@ -1,0 +1,47 @@
+# Atmel flip rules
+
+# ICE50:
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb", ATTRS{idVendor}=="03eb",
+ATTRS{idProduct}=="2101", MODE:="0660", GROUP="plugdev"
+
+# JTAGICE mkII:
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb", ATTRS{idVendor}=="03eb",
+ATTRS{idProduct}=="2103", MODE:="0660", GROUP="plugdev"
+
+# AVRISP mkII:
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb", ATTRS{idVendor}=="03eb",
+ATTRS{idProduct}=="2104", MODE:="0660", GROUP="plugdev"
+
+# AVRONE:
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb", ATTRS{idVendor}=="03eb",
+ATTRS{idProduct}=="2105", MODE:="0660", GROUP="plugdev"
+
+# STK600:
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb", ATTRS{idVendor}=="03eb",
+ATTRS{idProduct}=="2106", MODE:="0660", GROUP="plugdev"
+
+# AVR Dragon:
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb", ATTRS{idVendor}=="03eb",
+ATTRS{idProduct}=="2107", MODE:="0660", GROUP="plugdev"
+
+# RzUsbStick:
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb", ATTRS{idVendor}=="03eb",
+ATTRS{idProduct}=="210a", MODE:="0660", GROUP="plugdev"
+
+# QT600:
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb", ATTRS{idVendor}=="03eb",
+ATTRS{idProduct}=="2114", MODE:="0660", GROUP="plugdev"
+
+# QT600P:
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb", ATTRS{idVendor}=="03eb",
+ATTRS{idProduct}=="2116", MODE:="0660", GROUP="plugdev"
+
+# Add support AT32UC3A0128 AT32UC3A0256 AT32UC3A0512
+# AT32UC3A1128 AT32UC3A1256 AT32UC3A1512
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb", ATTRS{idVendor}=="03eb",
+ATTRS{idProduct}=="2ff8", MODE:="0660", GROUP="plugdev"
+
+# Add support  AT32UC3B0128 AT32UC3B0256 AT32UC3B064
+# AT32UC3B1128 AT32UC3B"""1256 AT32UC3B164
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb", ATTRS{idVendor}=="03eb",
+ATTRS{idProduct}=="2ff6", MODE:="0660", GROUP="plugdev"

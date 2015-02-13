@@ -8,7 +8,7 @@
 
 // ATMEL software framework
 #include <avr32/io.h>
-#include <board.h>
+#include "board.h"
 #include <intc.h>
 #include <pm.h>
 #include <usart.h>
@@ -799,3 +799,14 @@ void writeLogEntry(const char* format, ...)
 	fclose(logfile);
 }
 
+
+// dummy callback functions (workaround for bug in software framework)
+void sd_mmc_spi_write_multiple_sector_callback(void* sector_buf)
+{
+	
+}
+
+void sd_mmc_spi_read_multiple_sector_callback(const void* sector_buf)
+{
+	
+}

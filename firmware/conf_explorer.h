@@ -63,6 +63,8 @@
 #define FS_FAT_16             false
 #define FS_FAT_32             true
 
+#define FS_NO_SUPPORT_PART    false
+
 //! The explorer may support either the ASCII or the UNICODE string format, or both.
 #define FS_ASCII              true
 #define FS_UNICODE            false

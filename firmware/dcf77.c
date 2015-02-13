@@ -4,7 +4,7 @@
 
 #include <avr32/io.h>
 #include <intc.h>
-#include <board.h>
+#include "board.h"
 
 #include "main.h"
 #include "dcf77.h"

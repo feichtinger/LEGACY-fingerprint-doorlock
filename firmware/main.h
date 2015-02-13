@@ -3,7 +3,7 @@
 #define MAIN_H
 
 #include <stdint.h>
-#include <board.h>
+#include "board.h"
 
 /* common constants */
 
