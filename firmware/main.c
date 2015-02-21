@@ -62,7 +62,7 @@ volatile enum {NORMAL, ENROLL, DELETE, DELETE_ALL, RESTORE} mode=NORMAL;
 // temporary variables used for enroll, delete, restore,...
 volatile uint8_t temp_slot=1;
 volatile uint16_t temp_id=0;
-char *temp_name;
+char temp_name[MAXSTRLEN+1];
 uint16_t temp_openTime=0;
 
 // whole day access
