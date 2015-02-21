@@ -65,7 +65,7 @@ There is no explicit schematic for the whole circuit but there is kind of a netl
 
 ## Software
 ### preparing the AVR32 toolchain
-You need a bunch of software to compile the firmware for the EVK1101 and load it on the controller. This is called the toolchain. I will describe how to install the toolchain for Linux (in my case Ubuntu 14.04), if you are using windows it might be enough to install the AVR32-Studio, if you like to use a Mac, go somewhere else!
+You need a bunch of software to compile the firmware for the EVK1101 and load it on the controller. This is called the toolchain. I will describe how to install the toolchain for Linux (in my case Ubuntu 14.04), if you are using windows it might be enough to install the AVR32-Studio (or maybe not), if you like to use a Mac, go somewhere else!
 
 Create a folder on your disk for the toolchain anywhere you want, I will call it '~/AVR32_toolchain/'.
 
@@ -99,6 +99,11 @@ To download the firmware you have to connect the USB-cable to the EVK1101 and tu
 To download the firmware finally call `make flash`.
 
 Now you can connect a serial cable to the controller (baudrate 115200) and open a serial terminal (e.g. cutecom). When you press the reset button you should see a message from the firmware.
+
+### prepare the SD card
+The SD card is used to store the fingerprint database and the logfiles. The capacity of the SD-card does not realy matter, so just pick one from an old digicam for example. 
+
+Format the SD card with FAT32. Create a file "users.txt" and a folder "logfiles".
 
 ### build the Fingerprint-Manager
 The Fingerprint-Manager is a simple GUI written in Qt-5 that allows you to easily enroll and manage fingerprints. To build the Fingerprint-Manager you need to install Qt-Creator.

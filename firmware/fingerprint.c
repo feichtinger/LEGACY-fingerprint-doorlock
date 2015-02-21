@@ -325,8 +325,13 @@ int16_t getReply(uint8_t* ident, uint8_t packet[])
 		// check for USART overrun
 		if(usart_overrun_error(&FP_USART))
 		{
-			usart_reset_status(&FP_USART);
+			/* this can happen if unexpected serial data is received
+			 * wait some time until all invalid data is received
+			 * then reset the usart status und try again next time
+			 */
 			printf("USART overrun\n");
+			wait_ms(100);
+			usart_reset_status(&FP_USART);
 			return -1;
 		}
 		

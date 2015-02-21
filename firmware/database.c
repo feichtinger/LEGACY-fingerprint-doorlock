@@ -244,7 +244,7 @@ bool db_readFromCard(void)
 	FILE* file=fopen("A:/users.txt", "r");
 	if(file==NULL)
 	{
-		printf("ERROR: could not open file\n");
+		printf("ERROR: users.txt could not be opened.\n");
 		return false;
 	}
 	
