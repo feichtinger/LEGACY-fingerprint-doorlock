@@ -108,7 +108,6 @@ void FingerprintManager::readSerial()
 {
 	static QString buffer;
 	buffer.append(serial->readAll());
-	//buffer=QString("id: 0 F_Feichtinger_LZ 180\nid: 8 F_Feichtinger_LK 15\n");
 	
 	QStringList list=buffer.split(QChar('\n'));
 	
