@@ -1,0 +1,59 @@
+Cmp-Mod V01 Created by Cvpcb 0.201503020946+5465~21~ubuntu14.04.1-product   date = Sam 14 Mär 2015 14:18:44 CET
+
+BeginCmp
+TimeStamp = /55000DD9;
+Reference = BT1;
+ValeurCmp = BATTERY;
+IdModule  = footprints:keystone_103;
+EndCmp
+
+BeginCmp
+TimeStamp = /5500877E;
+Reference = C1;
+ValeurCmp = 100n;
+IdModule  = Capacitors_SMD:C_1206_HandSoldering;
+EndCmp
+
+BeginCmp
+TimeStamp = /5500858D;
+Reference = C2;
+ValeurCmp = 10p;
+IdModule  = Capacitors_SMD:C_0805_HandSoldering;
+EndCmp
+
+BeginCmp
+TimeStamp = /550085B2;
+Reference = C3;
+ValeurCmp = 10p;
+IdModule  = Capacitors_SMD:C_0805_HandSoldering;
+EndCmp
+
+BeginCmp
+TimeStamp = /5501E27D;
+Reference = P1;
+ValeurCmp = CONN_01X04;
+IdModule  = Pin_Headers:Pin_Header_Straight_1x04;
+EndCmp
+
+BeginCmp
+TimeStamp = /5501E88E;
+Reference = P2;
+ValeurCmp = CONN_01X01;
+IdModule  = Measurement_Points:Measurement_Point_Square-SMD-Pad_Small;
+EndCmp
+
+BeginCmp
+TimeStamp = /55008532;
+Reference = U1;
+ValeurCmp = MCP7940N;
+IdModule  = Housings_SSOP:MSOP-8_3x3mm_Pitch0.65mm;
+EndCmp
+
+BeginCmp
+TimeStamp = /5500847B;
+Reference = U2;
+ValeurCmp = 32.768kHz;
+IdModule  = footprints:FOX-tuning-fork;
+EndCmp
+
+EndListe

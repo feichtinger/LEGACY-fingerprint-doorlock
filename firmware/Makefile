@@ -1,6 +1,6 @@
 
 # C source files
-SRC = main.c fingerprint.c command_shell.c database.c syscalls.c dcf77.c
+SRC = main.c fingerprint.c command_shell.c database.c syscalls.c
 
 # Project name
 TARGET = main
@@ -96,7 +96,7 @@ OBJ = $(SRC:.c=.o) $(ASM_SRC:.S=.o)
 
 CFLAGS = -std=gnu99 -Wall -c -mpart=$(MCPU) -DBOARD=$(BOARD) -O$(OPT) $(AVR32HEADERS) -fno-common
 ASFLAGS = -x assembler-with-cpp -c -mpart=$(MCPU) $(AVR32HEADERS)
-LDFLAGS = -mpart=$(MCPU) -Wl,-T,link_$(MCPU).lds
+LDFLAGS = -mpart=$(MCPU) -Wl,-T,link_$(MCPU).lds -Wl,--gc-sections
 
 
 # ** ** ** *** ** ** ** ** ** ** ** ** ** ** **

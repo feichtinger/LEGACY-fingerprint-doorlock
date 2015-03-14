@@ -76,7 +76,7 @@ bool db_addFinger(char *name, uint16_t id, uint16_t openTime, uint8_t temp_file[
 {
 	if(id>=SIZE)
 	{
-		printf("ERROR: invalid id %d\n", id);
+		writeLogEntry("ERROR: invalid id %d", id);
 		return false;
 	}
 	
@@ -91,13 +91,13 @@ bool db_addFinger(char *name, uint16_t id, uint16_t openTime, uint8_t temp_file[
 	FILE* file=fopen(filename, "w");
 	if(file==NULL)
 	{
-		printf("ERROR: could not open file %s\n", filename);
+		writeLogEntry("ERROR: could not open file %s", filename);
 		return false;
 	}
 	
 	if(fwrite(temp_file, FINGERPRINT_TEMPSIZE, 1, file)!=1)
 	{
-		printf("ERROR: could not write to file %s\n", filename);
+		writeLogEntry("ERROR: could not write to file %s", filename);
 		fclose(file);
 		return false;
 	}
@@ -113,7 +113,7 @@ bool db_delFinger(uint16_t id)
 {
 	if(id>=SIZE)
 	{
-		printf("ERROR: invalid id %d\n", id);
+		writeLogEntry("ERROR: invalid id %d", id);
 		return false;
 	}
 	
@@ -131,14 +131,14 @@ bool db_setOpenTime(char *name, uint16_t openTime)
 {
 	if(openTime>24*60)
 	{
-		printf("ERROR: invalid open time\n");
+		writeLogEntry("ERROR: invalid open time");
 		return false;
 	}
 	
 	int id=db_findFinger(name);
 	if(id<0)
 	{
-		printf("ERROR: %s not found\n", name);
+		writeLogEntry("ERROR: %s not found", name);
 		return false;
 	}
 	
@@ -159,13 +159,13 @@ bool db_restoreFinger(char *name, uint8_t temp_file[FINGERPRINT_TEMPSIZE])
 	FILE* file=fopen(filename, "r");
 	if(file==NULL)
 	{
-		printf("ERROR: could not open file %s\n", filename);
+		writeLogEntry("ERROR: could not open file %s", filename);
 		return false;
 	}
 	
 	if(fread(temp_file, FINGERPRINT_TEMPSIZE, 1, file)!=1)
 	{
-		printf("ERROR: could not read from file %s\n", filename);
+		writeLogEntry("ERROR: could not read from file %s", filename);
 		fclose(file);
 		return false;
 	}
@@ -217,7 +217,7 @@ bool db_writeToCard(void)
 	FILE* file=fopen("A:/users.txt", "w");
 	if(file==NULL)
 	{
-		printf("ERROR: could not open file\n");
+		writeLogEntry("ERROR: could not open file");
 		return false;
 	}
 	
@@ -227,7 +227,7 @@ bool db_writeToCard(void)
 		{
 			if(fprintf(file, "%d: %s %d\n", id, finger[id].name, finger[id].openTime)<0)
 			{
-				printf("ERROR: could not write to file\n");
+				writeLogEntry("ERROR: could not write to file");
 				fclose(file);
 				return false;
 			}
@@ -244,7 +244,7 @@ bool db_readFromCard(void)
 	FILE* file=fopen("A:/users.txt", "r");
 	if(file==NULL)
 	{
-		printf("ERROR: users.txt could not be opened.\n");
+		writeLogEntry("ERROR: users.txt could not be opened.");
 		return false;
 	}
 	
@@ -265,14 +265,14 @@ bool db_readFromCard(void)
 		
 		if(id<0 || id>SIZE)
 		{
-			printf("ERROR: invalid id: %d\n", id);
+			writeLogEntry("ERROR: invalid id: %d", id);
 			fclose(file);
 			return false;
 		}
 		
 		if(openTime>24*60)
 		{
-			printf("ERROR: invalid open time: %d\n", openTime);
+			writeLogEntry("ERROR: invalid open time: %d", openTime);
 			fclose(file);
 			return false;
 		}

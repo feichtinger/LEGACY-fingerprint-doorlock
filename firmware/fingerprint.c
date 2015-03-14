@@ -210,20 +210,20 @@ uint8_t fp_upChar(uint8_t slot, uint8_t data_packet[FINGERPRINT_TEMPSIZE])
 			// end of data packet
 			if(pos!=FINGERPRINT_TEMPSIZE)
 			{
-				printf("ERROR: wrong size of data packet\n");
+				writeLogEntry("ERROR: wrong size of data packet");
 				return FINGERPRINT_BADPACKET;
 			}
 			break;
 		}
 		else if(ident!=FINGERPRINT_DATAPACKET)
 		{
-			printf("ERROR: invalid packet\n");
+			writeLogEntry("ERROR: invalid packet");
 			return FINGERPRINT_BADPACKET;
 		}
 		
 		if(pos>=FINGERPRINT_TEMPSIZE)
 		{
-			printf("ERROR: to long data packet\n");
+			writeLogEntry("ERROR: to long data packet");
 			return FINGERPRINT_BADPACKET;
 		}
 	}
@@ -323,13 +323,13 @@ int16_t getReply(uint8_t* ident, uint8_t packet[])
 	while(true)
 	{
 		// check for USART overrun
-		if(usart_overrun_error(&FP_USART))
+		if(usart_overrun_error(&FP_USART) || usart_framing_error(&FP_USART) || usart_parity_error(&FP_USART))
 		{
 			/* this can happen if unexpected serial data is received
 			 * wait some time until all invalid data is received
 			 * then reset the usart status und try again next time
 			 */
-			printf("USART overrun\n");
+			writeLogEntry("USART overrun");
 			wait_ms(100);
 			usart_reset_status(&FP_USART);
 			return -1;
@@ -341,7 +341,7 @@ int16_t getReply(uint8_t* ident, uint8_t packet[])
 			timer++;
 			if (timer >= DEFAULTTIMEOUT)
 			{
-				printf("fingerprint: timeout\n");
+				writeLogEntry("fingerprint: timeout");
 				return -1;
 			}
 		}
@@ -403,7 +403,7 @@ int16_t getReply(uint8_t* ident, uint8_t packet[])
 			}
 			else
 			{
-				printf("ERROR: wrong checksum\n");
+				writeLogEntry("ERROR: wrong checksum");
 				return -1;
 			}
 		}
@@ -416,21 +416,21 @@ int16_t getReply(uint8_t* ident, uint8_t packet[])
 
 void fp_error(uint8_t code)
 {
-	printf("FINGERPRINT ERROR: ");
+	writeLogEntry("FINGERPRINT ERROR: ");
 	
 	switch(code)
 	{
-		case FINGERPRINT_PACKETRECIEVEERR:	printf("error when receiving data packet\n"); break;
-		case FINGERPRINT_IMAGEFAIL:			printf("fail to enroll finger\n"); break;
-		case FINGERPRINT_IMAGEMESS:			printf("disordered fingerprint\n"); break;
-		case FINGERPRINT_FEATUREFAIL:		printf("too small fingerprint\n"); break;
-		case FINGERPRINT_ENROLLMISMATCH:	printf("enroll mismatch (could not combine the 2 samples)\n"); break;
-		case FINGERPRINT_BADPAGEID:			printf("invalid ID (out of memory)\n"); break;
-		case FINGERPRINT_FLASHERR:			printf("error writing flash\n"); break;
-		case FINGERPRINT_DELETEFAIL:		printf("failed to delete template\n"); break;
-		case FINGERPRINT_DBCLEARFAIL:		printf("failed to clear database\n"); break;
-		case FINGERPRINT_UPLOADFEATUREFAIL:	printf("error when uploading template\n"); break;
-		case FINGERPRINT_BADPACKET:			printf("packet error\n"); break;
-		default:							printf("other error\n"); break;
+		case FINGERPRINT_PACKETRECIEVEERR:	writeLogEntry("error when receiving data packet"); break;
+		case FINGERPRINT_IMAGEFAIL:			writeLogEntry("fail to enroll finger"); break;
+		case FINGERPRINT_IMAGEMESS:			writeLogEntry("disordered fingerprint"); break;
+		case FINGERPRINT_FEATUREFAIL:		writeLogEntry("too small fingerprint"); break;
+		case FINGERPRINT_ENROLLMISMATCH:	writeLogEntry("enroll mismatch (could not combine the 2 samples)"); break;
+		case FINGERPRINT_BADPAGEID:			writeLogEntry("invalid ID (out of memory)"); break;
+		case FINGERPRINT_FLASHERR:			writeLogEntry("error writing flash"); break;
+		case FINGERPRINT_DELETEFAIL:		writeLogEntry("failed to delete template"); break;
+		case FINGERPRINT_DBCLEARFAIL:		writeLogEntry("failed to clear database"); break;
+		case FINGERPRINT_UPLOADFEATUREFAIL:	writeLogEntry("error when uploading template"); break;
+		case FINGERPRINT_BADPACKET:			writeLogEntry("packet error"); break;
+		default:							writeLogEntry("other error"); break;
 	}
 }

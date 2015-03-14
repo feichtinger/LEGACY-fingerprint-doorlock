@@ -187,8 +187,6 @@ int main(void)
 	AVR32_PWM.channel[6].cdty = 0;					// start with duty=0
 	AVR32_PWM.ena = (1<<AVR32_PWM_ENA_CHID6);		// enable PWM
 	
-	// init DCF77 receiver
-	dcf_init();
 	
 	/*
 	 * hardware initialized, start up software
@@ -236,11 +234,11 @@ int main(void)
 	// read database from SD-card
 	if(!db_readFromCard())
 	{
-		printf("ERROR: could not read file\n");
+		writeLogEntry("ERROR: could not read file");
 		return 0;
 	}
 	
-	printf("\nready...\n");
+	writeLogEntry("system ready...");
 	
 	// enable interrupts
 	Enable_global_interrupt();
@@ -286,6 +284,8 @@ int main(void)
 			}
 		}
 		
+		// TODO
+		/*
 		// check for whole day access timeout
 		if(currentOpenTime!=0 && dcf_getCustomTimer()>60*currentOpenTime)
 		{
@@ -294,6 +294,7 @@ int main(void)
 			LOCK;
 			writeLogEntry("whole day access time out");
 		}
+		*/
 	}
 }
 
@@ -347,6 +348,8 @@ void normal_mode()
 			// found a match!
 			if(WDA_BUTTON_PRESSED)	// check for whole day access button
 			{
+				// TODO
+				/*
 				if(db_getOpenTime(id)>0)
 				{
 					// user is group leader -> authorized
@@ -356,7 +359,6 @@ void normal_mode()
 						currentOpenTime=0;
 						GREEN_LED_OFF;
 						LOCK;
-						printf("whole day access disabled by %s\n", db_getName(id));
 						writeLogEntry("whole day access disabled by %s", db_getName(id));
 						wait_ms(DOOR_OPEN_TIME);
 					}
@@ -367,17 +369,16 @@ void normal_mode()
 						GREEN_LED_ON;
 						UNLOCK;
 						dcf_startCustomTimer();
-						printf("whole day access enabled by %s\n", db_getName(id));
 						writeLogEntry("whole day access enabled by %s", db_getName(id));
 						wait_ms(DOOR_OPEN_TIME);
 						KEEP_UNLOCKED;
 					}
 				}
-				else
+				else*/
 				{
 					// user is normal user -> not authorized to change whole day access
 					RED_LED_ON;
-					printf("%s is not allowed to change whole day access\n", db_getName(id));
+					writeLogEntry("%s is not allowed to change whole day access", db_getName(id));
 					wait_ms(ACCESS_DENIED_TIMEOUT);
 					RED_LED_OFF;
 				}
@@ -387,8 +388,7 @@ void normal_mode()
 				// normal access when WDA is disabled
 				GREEN_LED_ON;
 				UNLOCK;
-				printf("access granted for %s, score: %d\n", db_getName(id), score);
-				writeLogEntry("access granted for %s", db_getName(id));
+				writeLogEntry("access granted for %s, score: %d", db_getName(id), score);
 				wait_ms(DOOR_OPEN_TIME);
 				GREEN_LED_OFF;
 				LOCK;
@@ -400,7 +400,7 @@ void normal_mode()
 		{
 			// no matching template
 			RED_LED_ON;
-			printf("Access denied, please try again.\n");
+			writeLogEntry("Access denied, please try again.");
 			wait_ms(ACCESS_DENIED_TIMEOUT);
 			RED_LED_OFF;
 			return;
@@ -483,7 +483,7 @@ void enroll_mode()
 			// finger enrolled, store in database, save template on SD-card
 			if(db_addFinger(temp_name, temp_id, temp_openTime, temp_file))
 			{
-				printf("%s successfully enrolled, id=%d\n", temp_name, temp_id);
+				writeLogEntry("%s successfully enrolled, id=%d", temp_name, temp_id);
 			}
 			
 			//wait_ms(ACCESS_DENIED_TIMEOUT);
@@ -512,7 +512,7 @@ void delete_mode()
 	// remove entry from database (but not the template file!)
 	if(db_delFinger(temp_id))
 	{
-		printf("finger successfully deleted, id=%d\n", temp_id);
+		writeLogEntry("finger successfully deleted, id=%d", temp_id);
 	}
 	
 	// success, back to normal mode
@@ -536,7 +536,7 @@ void delete_all_mode()
 	
 	if(db_deleteAllFingers())
 	{
-		printf("all fingers deleted successfully\n");
+		writeLogEntry("all fingers deleted successfully");
 	}
 	mode=NORMAL;
 }
@@ -575,7 +575,7 @@ void restore_mode()
 		return;
 	}
 	
-	printf("finger successfully restored\n");
+	writeLogEntry("finger successfully restored");
 	mode=NORMAL;
 }
 
@@ -594,17 +594,17 @@ void start_enroll(char *name, uint16_t openTime)
 	uint8_t len=strlen(name);
 	if(len==0)
 	{
-		printf("ERROR: expected name for fingerprint!\n");
+		writeLogEntry("ERROR: expected name for fingerprint!");
 		return;
 	}
 	if(len>MAXSTRLEN)
 	{
-		printf("ERROR: name is too long!\n");
+		writeLogEntry("ERROR: name is too long!");
 		return;
 	}
 	if(db_findFinger(name)>=0)
 	{
-		printf("ERROR: this name already exists, choose a different name\n");
+		writeLogEntry("ERROR: this name already exists, choose a different name");
 		return;
 	}
 	
@@ -612,18 +612,18 @@ void start_enroll(char *name, uint16_t openTime)
 	int16_t id=db_findFirstFree();
 	if(id<0)
 	{
-		printf("ERROR: finger library is full!\n");
+		writeLogEntry("ERROR: finger library is full!");
 		return;
 	}
 	
 	// check open time
 	if(openTime>24*60)
 	{
-		printf("ERROR: invalid open time\n");
+		writeLogEntry("ERROR: invalid open time");
 		return;
 	}
 	
-	printf("enrolling finger, place finger on sensor and wait...\n");
+	writeLogEntry("enrolling finger, place finger on sensor and wait...");
 	
 	mode=ENROLL;
 	temp_id=id;
@@ -640,18 +640,18 @@ void start_delete(char *name)
 	uint8_t len=strlen(name);
 	if(len==0)
 	{
-		printf("ERROR: expected name for fingerprint!\n");
+		writeLogEntry("ERROR: expected name for fingerprint!");
 		return;
 	}
 	if(len>MAXSTRLEN)
 	{
-		printf("ERROR: name is too long!\n");
+		writeLogEntry("ERROR: name is too long!");
 		return;
 	}
 	int16_t id=db_findFinger(name);
 	if(id<0)
 	{
-		printf("ERROR: this name does not exist in library\n");
+		writeLogEntry("ERROR: this name does not exist in library");
 		return;
 	}
 	
@@ -673,18 +673,18 @@ void start_restore(char* name)
 	uint8_t len=strlen(name);
 	if(len==0)
 	{
-		printf("ERROR: expected name for fingerprint!\n");
+		writeLogEntry("ERROR: expected name for fingerprint!");
 		return;
 	}
 	if(len>MAXSTRLEN)
 	{
-		printf("ERROR: name is too long!\n");
+		writeLogEntry("ERROR: name is too long!");
 		return;
 	}
 	int16_t id=db_findFinger(name);
 	if(id<0)
 	{
-		printf("ERROR: this name does not exist in library\n");
+		writeLogEntry("ERROR: this name does not exist in library");
 		return;
 	}
 	
@@ -698,7 +698,7 @@ void abort_op()
 {
 	mode=NORMAL;
 	temp_slot=1;
-	printf("aborted\n");
+	writeLogEntry("aborted");
 }
 
 
@@ -764,20 +764,29 @@ void writeLogEntry(const char* format, ...)
 	va_list args;
 	va_start(args, format);
 	
-	time_t time=dcf_getTime();
+	time_t time=0;		// TODO
 	struct tm * time_struct=localtime(&time);
 	
 	// one logfile per day
 	char filename[31];
+	/*
 	if(dcf_isTimeValid())
 	{
 		strftime(filename, 30, "A:/logfiles/%Y_%m_%d.log", time_struct);
 	}
-	else
+	else*/
 	{
 		// date & time is invalid, write to separate file
 		strcpy(filename, "A:/logfiles/invalid_time.log");
 	}
+	
+	// prepend time to string
+	char string[101];
+	strftime(string, 100, "<%H:%M:%S> ", time_struct);
+	strcat(string, format);
+	strcat(string, "\n");
+	
+	vprintf(string, args);				// write to serial port
 	
 	// open logfile
 	logfile=fopen(filename, "a");
@@ -787,13 +796,7 @@ void writeLogEntry(const char* format, ...)
 		return;
 	}
 	
-	// prepend time to string
-	char string[101];
-	strftime(string, 100, "<%H:%M:%S> ", time_struct);
-	strcat(string, format);
-	strcat(string, "\n");
-	
-	vfprintf(logfile, string, args);
+	vfprintf(logfile, string, args);	// write to logfile
 	va_end(args);
 	
 	fclose(logfile);

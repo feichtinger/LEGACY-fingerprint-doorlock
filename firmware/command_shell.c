@@ -325,15 +325,16 @@ void executeCommand(char *command, uint8_t argc, token param[argc])
 	// print the current time
 	else if(strcmp(command, "time")==0 && argc==0)
 	{
+		/*
 		if(dcf_isTimeValid())
 		{
 			char string[101];
-			time_t time=dcf_getTime();
+			time_t time=0;		// TODO
 			struct tm * time_struct=localtime(&time);
 			strftime(string, 100, "%Y_%m_%d %H:%M:%S", time_struct);
 			printf("%s\n", string);
 		}
-		else
+		else*/
 		{
 			printf("no valid time\n");
 		}

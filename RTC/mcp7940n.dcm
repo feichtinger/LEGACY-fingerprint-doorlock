@@ -1,0 +1,8 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP MCP7940N
+D Real-Time Clock, I2C, Battery Backup
+K realtime, RTC
+$ENDCMP
+#
+#End Doc Library

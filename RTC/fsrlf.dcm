@@ -1,0 +1,8 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP FSRLF
+D quarz tuning fork, FOX
+K quarz, crystal, tuning fork, resonator
+$ENDCMP
+#
+#End Doc Library

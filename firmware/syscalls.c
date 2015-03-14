@@ -17,7 +17,8 @@ int __errno;
 
 void _exit(int status)
 {
-	while(1);
+	writeLogEntry("_exit entered, wait for watchdog...");
+	while(true);
 }
 
 
