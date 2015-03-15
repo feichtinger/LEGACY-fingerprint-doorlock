@@ -11,11 +11,11 @@
 #define RTC_H_
 
 #include <time.h>
-#include <twi/twi.h>
+#include <twi.h>
 #include <stdint.h>
 #include <stdbool.h>
 
-bool RTC_Init();
+bool RTC_Init(unsigned long pba_hz);
 // use
 // 		time_t time(time_t* __time)
 // for getting current time from chip (declared in time.h)

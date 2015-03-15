@@ -30,7 +30,7 @@ All fingerprints can be managed by a simple GUI called Fingerprint-Manager or si
 
 optional:
 
-* a DCF77 receiver module (for logfiles)
+* a realtime clock module (for logfiles)
 * a weather-proof button (for whole day access)
 
 ## System Components
@@ -60,8 +60,12 @@ The buzzer is driven by the controller board. Ensure that the connecting cable i
 ### PC
 The normal operation (entering the door) is managed with with the above components only. But for enrolling new fingers, deleting fingers or to change settings a PC is necessary. You can either use a simple serial terminal software (e.g. cutecom) or you can use the Fingerprint-Manager.
 
+### Realtime clock
+I used the MCP7940N, a realtime clock made for 32.768kHz tuning forks with battery backup (thanks to Pointhi). I made a small PCB for the chip and its components with KiCad. It can be plugged directly into the TWI (=I²C) interface on the EVK1101.
+Using the realtime clock it is possible to write log files on the SD card as it keeps the time also while the power is down or after resetting the system. This also helps at debugging.
+
 ## Netlist
-There is no explicit schematic for the whole circuit but there is kind of a netlist ("netlist.ods") so you know which cable to connect to which pin. There are some necessary modifications on the EVK1101, don't forget about them! 
+There is no explicit schematic for the whole circuit but there is kind of a netlist ("netlist.ods") so you know which cable to connect to which pin. There are some slightly but necessary modifications on the EVK1101, don't forget about them!
 
 ## Software
 ### preparing the AVR32 toolchain

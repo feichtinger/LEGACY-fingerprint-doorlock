@@ -1,6 +1,6 @@
 
 # C source files
-SRC = main.c fingerprint.c command_shell.c database.c syscalls.c
+SRC = main.c fingerprint.c command_shell.c database.c syscalls.c rtc.c
 
 # Project name
 TARGET = main
@@ -52,6 +52,7 @@ AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/avr32/drivers/pm/
 #AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/avr32/drivers/pwm/
 AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/avr32/drivers/usart/
 AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/avr32/drivers/spi/
+AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/avr32/drivers/twi/
 # for SD card
 AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/avr32/components/memory/sd_mmc/sd_mmc_spi/
 AVR32HEADERS +=		-I $(AVR32FRAMEWORK)/common/services/storage/ctrl_access
@@ -67,6 +68,7 @@ SRC +=	$(AVR32FRAMEWORK)/avr32/drivers/pm/pm.c
 #SRC +=	$(AVR32FRAMEWORK)/avr32/drivers/pm/power_clocks_lib.c
 #SRC +=	$(AVR32FRAMEWORK)/avr32/drivers/pwm/pwm.c
 SRC +=	$(AVR32FRAMEWORK)/avr32/drivers/spi/spi.c
+SRC +=	$(AVR32FRAMEWORK)/avr32/drivers/twi/twi.c
 SRC +=	$(AVR32FRAMEWORK)/avr32/drivers/usart/usart.c
 SRC +=	$(AVR32FRAMEWORK)/avr32/boards/$(BOARDPATH)/led.c
 # for SD card

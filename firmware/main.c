@@ -28,7 +28,7 @@
 #include "fingerprint.h"
 #include "command_shell.h"
 #include "database.h"
-#include "dcf77.h"
+#include "rtc.h"
 
 
 /*
@@ -66,7 +66,7 @@ char temp_name[MAXSTRLEN+1];
 uint16_t temp_openTime=0;
 
 // whole day access
-uint16_t currentOpenTime=0;		// current open time for WDA, 0 means no WDA
+time_t doorClosingTime=0;		// time when WDA is disabled, 0 means no WDA
 
 
 /* private functions */
@@ -164,14 +164,17 @@ int main(void)
 		.channelmode  = USART_NORMAL_CHMODE
 	};
 	usart_init_rs232(&FP_USART, &FP_USART_OPTIONS, FOSC0);
-	
 
 	// init interrupt vectors.
 	INTC_init_interrupts();
 	INTC_register_interrupt(&pc_usart_int_handler, AVR32_USART1_IRQ, AVR32_INTC_INT0);
+	
+	// Initialize and enable interrupt, seems to be needed by TWI...?
+	cpu_irq_enable();
 
 	// Enable USART Rx interrupt.
 	AVR32_USART1.ier = AVR32_USART_IER_RXRDY_MASK;
+	
 	
 	// Initialize SD/MMC driver resources: GPIO, SPI and SD/MMC.
 	sd_mmc_resources_init();
@@ -187,7 +190,6 @@ int main(void)
 	AVR32_PWM.channel[6].cdty = 0;					// start with duty=0
 	AVR32_PWM.ena = (1<<AVR32_PWM_ENA_CHID6);		// enable PWM
 	
-	
 	/*
 	 * hardware initialized, start up software
 	 */
@@ -199,6 +201,18 @@ int main(void)
 	
 	// wait for fingerprint-sensor to start up
 	wait_ms(500);
+	
+	// init realtime clock
+	printf("check for realtime clock...");
+	if(RTC_Init(FOSC0))
+	{
+		printf("OK\n");
+	}
+	else
+	{
+		printf("ERROR: could not init realtime clock\n");
+		return 0;
+	}
 	
 	
 	// init SD-card
@@ -234,7 +248,7 @@ int main(void)
 	// read database from SD-card
 	if(!db_readFromCard())
 	{
-		writeLogEntry("ERROR: could not read file");
+		printf("ERROR: could not read file\n");
 		return 0;
 	}
 	
@@ -284,17 +298,15 @@ int main(void)
 			}
 		}
 		
-		// TODO
-		/*
+		
 		// check for whole day access timeout
-		if(currentOpenTime!=0 && dcf_getCustomTimer()>60*currentOpenTime)
+		if(doorClosingTime!=0 && time(NULL)>=doorClosingTime)
 		{
-			currentOpenTime=0;
+			doorClosingTime=0;
 			GREEN_LED_OFF;
 			LOCK;
 			writeLogEntry("whole day access time out");
 		}
-		*/
 	}
 }
 
@@ -348,15 +360,13 @@ void normal_mode()
 			// found a match!
 			if(WDA_BUTTON_PRESSED)	// check for whole day access button
 			{
-				// TODO
-				/*
 				if(db_getOpenTime(id)>0)
 				{
 					// user is group leader -> authorized
-					if(currentOpenTime!=0)
+					if(doorClosingTime!=0)
 					{
 						// disable whole day access
-						currentOpenTime=0;
+						doorClosingTime=0;
 						GREEN_LED_OFF;
 						LOCK;
 						writeLogEntry("whole day access disabled by %s", db_getName(id));
@@ -365,16 +375,16 @@ void normal_mode()
 					else
 					{
 						// enable whole day access
-						currentOpenTime=db_getOpenTime(id);
+						doorClosingTime=time(NULL)+db_getOpenTime(id)*60;		// calculate door closing time
+						
 						GREEN_LED_ON;
 						UNLOCK;
-						dcf_startCustomTimer();
 						writeLogEntry("whole day access enabled by %s", db_getName(id));
 						wait_ms(DOOR_OPEN_TIME);
 						KEEP_UNLOCKED;
 					}
 				}
-				else*/
+				else
 				{
 					// user is normal user -> not authorized to change whole day access
 					RED_LED_ON;
@@ -383,7 +393,7 @@ void normal_mode()
 					RED_LED_OFF;
 				}
 			}
-			else if(currentOpenTime==0)
+			else if(doorClosingTime==0)
 			{
 				// normal access when WDA is disabled
 				GREEN_LED_ON;
@@ -764,21 +774,13 @@ void writeLogEntry(const char* format, ...)
 	va_list args;
 	va_start(args, format);
 	
-	time_t time=0;		// TODO
-	struct tm * time_struct=localtime(&time);
+	time_t t=time(NULL);						// get time from rtc
+	//time_t t=0;
+	struct tm * time_struct=localtime(&t);
 	
 	// one logfile per day
 	char filename[31];
-	/*
-	if(dcf_isTimeValid())
-	{
-		strftime(filename, 30, "A:/logfiles/%Y_%m_%d.log", time_struct);
-	}
-	else*/
-	{
-		// date & time is invalid, write to separate file
-		strcpy(filename, "A:/logfiles/invalid_time.log");
-	}
+	strftime(filename, 30, "A:/logfiles/%Y_%m_%d.log", time_struct);
 	
 	// prepend time to string
 	char string[101];

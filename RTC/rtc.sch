@@ -55,7 +55,7 @@ F 1 "BATTERY" H 6250 2560 50  0000 C CNN
 F 2 "footprints:keystone_103" H 6250 2750 60  0001 C CNN
 F 3 "" H 6250 2750 60  0000 C CNN
 	1    6250 2750
-	-1   0    0    1   
+	1    0    0    -1  
 $EndComp
 $Comp
 L GND #PWR01
@@ -94,8 +94,6 @@ Wire Wire Line
 	5450 2800 5450 3050
 Wire Wire Line
 	5750 3050 5750 2750
-Wire Wire Line
-	5750 2750 5950 2750
 Wire Wire Line
 	6550 2750 6750 2750
 Wire Wire Line
@@ -279,4 +277,6 @@ Wire Wire Line
 	4750 4250 4750 3950
 Wire Wire Line
 	4750 3950 4950 3950
+Wire Wire Line
+	5750 2750 5950 2750
 $EndSCHEMATC

@@ -7,9 +7,15 @@
  * 
  */
 
+#include <stdio.h>
 
-#include "RTC.h"
+#include "rtc.h"
+#include <avr32/io.h>
 #include <twi.h>
+#include <gpio.h>
+
+#include "main.h"
+
 
 #define RTC_SLAVE_ADDRESS 0x6F	// MCP7940N
 
@@ -30,20 +36,25 @@ enum RTC_Registers
 
 
 
-// TWI-peripheral has to be initialized before calling RTC_Init() !!!
 bool RTC_Init(unsigned long pba_hz)
 {
-	twi_master_enable(&AVR32_TWI);
-	twi_disable_interrupt(&AVR32_TWI);
+	// setup hardware for TWI
+	static const gpio_map_t TWI_GPIO_MAP =
+	{
+		{AVR32_TWI_SDA_0_0_PIN, AVR32_TWI_SDA_0_0_FUNCTION},
+		{AVR32_TWI_SCL_0_0_PIN, AVR32_TWI_SCL_0_0_FUNCTION}
+	};
+	gpio_enable_module(TWI_GPIO_MAP, sizeof(TWI_GPIO_MAP) / sizeof(TWI_GPIO_MAP[0]));
 	
+	// set TWI options
 	twi_options_t twi_options=
 	{
 		.pba_hz=pba_hz,
 		.speed=100000,
 		.chip=0				// not used for master mode
-	}
-	
+	};
 	twi_master_init(&AVR32_TWI, &twi_options);
+	
 	
 	if(twi_probe(&AVR32_TWI, RTC_SLAVE_ADDRESS)==TWI_SUCCESS)
 	{
@@ -72,11 +83,11 @@ time_t time(time_t *__timer)
 		.addr_length=1,
 		.buffer=b,
 		.length=7
-	}
+	};
 	
 	if(twi_master_read(&AVR32_TWI, &twi_package)!=TWI_SUCCESS)
 	{
-		writeLogEntry("ERROR: could not read from real-time clock");
+		printf("ERROR: could not read from real-time clock\n");
 		return 0;
 	}
 
@@ -102,7 +113,7 @@ void RTC_SetDateTime(struct tm* ts)
 {
 	uint8_t b[7]={0};
 
-	time_t t = mktime(ts); // adjust all entries in this structure (so that all fields are in range)
+	mktime(ts); // adjust all entries in this structure (so that all fields are in range)
 		// refer to K.N.King p. 694
 		// it calculates tm_wday and tm_yday
 
@@ -116,6 +127,7 @@ void RTC_SetDateTime(struct tm* ts)
 	b[REG_Year] = (ts->tm_year-100)/10 << 4 | (ts->tm_year-100)%10;
 	
 	b[REG_Seconds] |= 1<<7;	// start oscillator
+	b[REG_Day] |= 1<<3;		// enable battery backup
 	
 	twi_package_t twi_package=
 	{
@@ -124,15 +136,15 @@ void RTC_SetDateTime(struct tm* ts)
 		.addr_length=1,
 		.buffer=b,
 		.length=7
-	}
+	};
 	
-	if(twi_master_write(&AVR32, twi_package)==TWI_SUCCESS)
+	if(twi_master_write(&AVR32_TWI, &twi_package)==TWI_SUCCESS)
 	{
-		writeLogEntry("new time written to real-time clock");
+		writeLogEntry("new time written to real-time clock\n");
 	}
 	else
 	{
-		writeLogEntry("ERROR, could not write new time to real-time clock");
+		printf("ERROR, could not write new time to real-time clock\n");
 	}
 }
 

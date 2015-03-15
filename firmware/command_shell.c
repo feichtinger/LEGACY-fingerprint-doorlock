@@ -11,10 +11,10 @@
 #include "command_shell.h"
 #include "main.h"
 #include "database.h"
-#include "dcf77.h"
+#include "rtc.h"
 
 #define MAXCMDLEN 100		// maximum length of command line
-#define MAX_PARAM 5			// maximum number of parameters for a command
+#define MAX_PARAM 6			// maximum number of parameters for a command
 
 bool delete_all_preselected=false;	// if this flag is true, we are waiting for 'YES' to be entered
 
@@ -285,11 +285,12 @@ void executeCommand(char *command, uint8_t argc, token param[argc])
 		printf("delete <name>                delete this finger\n");
 		printf("set_open_time <name> <time>  set open time of finger\n");
 		printf("list                         list all enrolled fingers\n");
-		printf("time                         print current time\n");
+		printf("time                         print current date and time\n");
 		printf("abort                        abort pending operation\n");
 		printf("advanced commands:\n");
 		printf("restore <name>               load template file from SD-card and store on sensor\n");
 		printf("delete_all                   delete ALL fingers\n");
+		printf("set_time                     set current date and time\n");
 	}
 	
 	// enroll new finger
@@ -325,19 +326,11 @@ void executeCommand(char *command, uint8_t argc, token param[argc])
 	// print the current time
 	else if(strcmp(command, "time")==0 && argc==0)
 	{
-		/*
-		if(dcf_isTimeValid())
-		{
-			char string[101];
-			time_t time=0;		// TODO
-			struct tm * time_struct=localtime(&time);
-			strftime(string, 100, "%Y_%m_%d %H:%M:%S", time_struct);
-			printf("%s\n", string);
-		}
-		else*/
-		{
-			printf("no valid time\n");
-		}
+		char string[101];
+		time_t t=time(NULL);
+		struct tm * time_struct=localtime(&t);
+		strftime(string, 100, "%Y_%m_%d %H:%M:%S", time_struct);
+		printf("%s\n", string);
 	}
 	
 	// abort peding operation (enroll, delete, ...)
@@ -365,6 +358,24 @@ void executeCommand(char *command, uint8_t argc, token param[argc])
 	{
 		delete_all_preselected=false;
 		start_delete_all();
+	}
+	
+	// set date and time
+	else if(strcmp(command, "set_time")==0 && argc==6
+				&& param[0].kind==number && param[1].kind==number && param[2].kind==number
+				&& param[3].kind==number && param[4].kind==number && param[5].kind==number)
+	{
+		struct tm time_struct=
+		{
+			.tm_year=param[0].value-1900,
+			.tm_mon=param[1].value-1,
+			.tm_mday=param[2].value,
+			.tm_hour=param[3].value,
+			.tm_min=param[4].value,
+			.tm_sec=param[5].value
+		};
+		
+		RTC_SetDateTime(&time_struct);
 	}
 	
 	// invalid command
