@@ -119,6 +119,10 @@ int main(void)
 	AVR32_WDT.ctrl = (0x55<<AVR32_WDT_KEY)|(20<<AVR32_WDT_PSEL)|(1<<AVR32_WDT_EN);
 	AVR32_WDT.ctrl = (0xAA<<AVR32_WDT_KEY)|(20<<AVR32_WDT_PSEL)|(1<<AVR32_WDT_EN);
 	
+	// enable BOD, 1.61V
+	AVR32_PM.bod = (0x55<<AVR32_WDT_KEY)|(1<<AVR32_PM_BOD_CTRL)|(1<<AVR32_PM_BOD_HYST)|(0b011111<<AVR32_PM_BOD_LEVEL);
+	AVR32_PM.bod = (0xAA<<AVR32_WDT_KEY)|(1<<AVR32_PM_BOD_CTRL)|(1<<AVR32_PM_BOD_HYST)|(0b011111<<AVR32_PM_BOD_LEVEL);
+	
 	// configure LED0, LED1, LED2
 	AVR32_GPIO.port[0].gpers = (1<<7)|(1<<8)|(1<<21);
 	AVR32_GPIO.port[0].oders = (1<<7)|(1<<8)|(1<<21);
@@ -251,6 +255,26 @@ int main(void)
 		printf("ERROR: could not read file\n");
 		return 0;
 	}
+	
+	// check reset cause
+	switch(pm_get_reset_cause(&AVR32_PM))
+	{
+		case 1<<AVR32_PM_RCAUSE_POR:
+			writeLogEntry("Power-On Reset");
+			break;
+		case 1<<AVR32_PM_RCAUSE_BOD:
+			writeLogEntry("Brownout Reset");
+			break;
+		case 1<<AVR32_PM_RCAUSE_EXT:
+			writeLogEntry("External Reset");
+			break;
+		case 1<<AVR32_PM_RCAUSE_WDT:
+			writeLogEntry("Watchdog Timer Reset");
+			break;
+		default:
+			writeLogEntry("other reset cause");
+	}
+	
 	
 	writeLogEntry("system ready...");
 	
